@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from "@emotion/styled";
-import { obtenerDiferenciaYear } from '../helper';
+import { obtenerDiferenciaYear, calcularMarca, obtenerPlan } from '../helper';
 
 const Campo = styled.div`
 display: flex;
@@ -50,7 +50,7 @@ text-align: center;
 margin-bottom: 2rem;
 `;
 
-const Formulario = () => {
+const Formulario = ({ setResumen }) => {
 const [ datos, guardarDatos ] = useState({
     marca: "",
     year: "",
@@ -87,15 +87,23 @@ const cotizarSeguro = e => {
     
     //Por cada año hay que restar el 3%
     resultado -= ((diferencia * 3) * resultado) / 100;
-    console.log(resultado);
     //Americano 15%
     //Asiatico 5%
     //Europeo 30%
+    resultado = calcularMarca(marca) * resultado;
     
     //Basico aumenta 20%
     //Completo aumenta 50%
+    
+    const incrementoPlan = obtenerPlan(plan);
+    resultado = parseFloat(incrementoPlan * resultado).toFixed(2);
+    console.log(resultado);
 
     //Total
+    setResumen({
+        cotizacion: resultado,
+        datos
+    })
 }
     return (
         <form
@@ -124,6 +132,7 @@ const cotizarSeguro = e => {
                 onChange={obtenerInformación}
                 >
                 <option value="">-- Seleccione --</option>
+                <option value="2022">2022</option>
                 <option value="2021">2021</option>
                 <option value="2020">2020</option>
                 <option value="2019">2019</option>
