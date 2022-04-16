@@ -50,7 +50,7 @@ text-align: center;
 margin-bottom: 2rem;
 `;
 
-const Formulario = ({ setResumen }) => {
+const Formulario = ({ setResumen, setCargando }) => {
 const [ datos, guardarDatos ] = useState({
     marca: "",
     year: "",
@@ -97,14 +97,19 @@ const cotizarSeguro = e => {
     
     const incrementoPlan = obtenerPlan(plan);
     resultado = parseFloat(incrementoPlan * resultado).toFixed(2);
-    console.log(resultado);
+    setCargando(true);
+    setTimeout(() => {
+        //Elimina el spinner
+        setCargando(false)
+        //Pasa el resultado al componente principal
+        setResumen({
+            cotizacion: resultado,
+            datos
+        });
+        
+    }, 3000);
 
-    //Total
-    setResumen({
-        cotizacion: resultado,
-        datos
-    })
-}
+};
     return (
         <form
         onSubmit={cotizarSeguro}
